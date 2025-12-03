@@ -72,6 +72,49 @@ Point::~Point() {
     cout << "Вызван деструктор ~Point(). Объект удалён." << endl;
 }
 
+class ColoredPoint : public Point {
+    private: 
+        string color_;
+
+    public:
+        ColoredPoint();
+        ColoredPoint(double x, double y, const string& color);
+        ColoredPoint(const ColoredPoint& other);
+        ~ColoredPoint();
+
+        string GetColor();
+        void SetColor(const string& color);
+        void Print();
+};
+
+ColoredPoint::ColoredPoint() : Point(), color_("black") {
+    cout << "Вызван конструктор ColoredPoint()\n" << endl;
+    cout << "Объект класса ColoredPoint создан.\n";
+}
+
+ColoredPoint::ColoredPoint(double x, double y, const string& color) : Point(x, y), color_(color) {
+    cout << "Вызван констуктор ColoredPoint(double x, double y, const string& color)\n";
+    cout << "Объект класса ColoredPoint создан.\n";
+}
+
+ColoredPoint::ColoredPoint(const ColoredPoint& other) : Point(other), color_(other.color_) {
+    cout << "Вызван констуктор ColoredPoint(const ColoredPoint& other)\n";
+    cout << "Объект класса ColoredPoint создан.\n";
+}
+
+ColoredPoint::~ColoredPoint() {
+    cout << "Вызван деструктор ~ColoredPoint(). Объект удалён." << endl;
+}
+
+string ColoredPoint::GetColor() { return color_; }
+
+void ColoredPoint::SetColor(const string& color) { color_ = color; }
+
+void ColoredPoint::Print() {
+    Point::Print();
+    cout << "Color: " << GetColor() << endl;
+}
+
 int main() {
     cout << "\nСоздаем динамический объект Point по умолчанию....." << endl;
     cout << "===================================================" << endl;
