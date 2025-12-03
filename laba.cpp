@@ -43,7 +43,7 @@ void Point::SetY() {
 }
 
 void Point::Print() {
-    cout << "Вызван метод Print()\n";
+    cout << "\nВызван метод Print()\n";
     cout << "Координата X: " << GetX() << ", координата Y: " << GetY() << endl;
 }
 
@@ -88,17 +88,17 @@ class ColoredPoint : public Point {
 };
 
 ColoredPoint::ColoredPoint() : Point(), color_("black") {
-    cout << "Вызван конструктор ColoredPoint()\n" << endl;
+    cout << "\nВызван конструктор ColoredPoint()\n";
     cout << "Объект класса ColoredPoint создан.\n";
 }
 
 ColoredPoint::ColoredPoint(double x, double y, const string& color) : Point(x, y), color_(color) {
-    cout << "Вызван констуктор ColoredPoint(double x, double y, const string& color)\n";
+    cout << "\nВызван констуктор ColoredPoint(double x, double y, const string& color)\n";
     cout << "Объект класса ColoredPoint создан.\n";
 }
 
 ColoredPoint::ColoredPoint(const ColoredPoint& other) : Point(other), color_(other.color_) {
-    cout << "Вызван констуктор ColoredPoint(const ColoredPoint& other)\n";
+    cout << "\nВызван констуктор ColoredPoint(const ColoredPoint& other)\n";
     cout << "Объект класса ColoredPoint создан.\n";
 }
 
@@ -159,6 +159,56 @@ int main() {
     cout << "================================================" << endl;
     Point c(b);
     c.Print();
+
+    cout << "\n\n";
+
+    cout << "\nСоздаем динамический объект ColoredPoint по умолчанию....." << endl;
+    cout << "==========================================================" << endl;
+    ColoredPoint *cp1 = new ColoredPoint();
+    cp1->Print();
+
+    cout << "\n\n";
+
+    cout << "\nСоздаем динамический объект ColoredPoint....." << endl;
+    cout << "=============================================" << endl;
+    ColoredPoint *cp2 = new ColoredPoint(3.0, 8.5, "blue");
+    cp2->Print();
+
+    cout << "\n\n";
+
+    cout << "\nКопируем динамический объект ColoredPoint в другой объект ColoredPoint....." << endl;
+    cout << "===========================================================================" << endl;
+    ColoredPoint *cp3 = new ColoredPoint(*cp1);
+    cp3->Print();
+
+    cout << "\n\n";
+
+    cout << "\nУдаляем созданные динамические объекты....." << endl;
+    cout << "===========================================" << endl;
+    delete cp1;
+    delete cp2;
+    delete cp3;
+
+    cout << "\n\n";
+
+    cout << "\nСоздаем объект ColoredPoint по умолчанию....." << endl;
+    cout << "======================================" << endl;
+    ColoredPoint cp_1;
+    cp_1.Print();
+
+    cout << "\n\n";
+
+    cout << "\nСоздаем объект ColoredPoint....." << endl;
+    cout << "================================" << endl;
+    ColoredPoint cp_2(5.0, 2.0, "white");
+    cp_2.Print();
+
+    cout << "\n\n";
+
+    cout << "\nКопируем объект ColoredPoint в другой объект ColoredPoint....." << endl;
+    cout << "==============================================================" << endl;
+    ColoredPoint cp_3(cp_2);
+    cp_3.Print();
 
     cout << "\n\n";
 
