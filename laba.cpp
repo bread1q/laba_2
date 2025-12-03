@@ -5,52 +5,59 @@ using namespace std;
 
 class Point {
     private:
-        double x_ = 0;
-        double y_ = 0;
+        double x_;
+        double y_;
+    protected:
+        int size_;
     public:
-        double GetX() { return x_; };
-        double GetY() { return y_; };
+        double GetX() const { return x_; };
+        double GetY() const { return y_; };
+        int GetSize() const { return size_; };
         void SetX(double x) { x_ = x; };
         void SetY(double y) { y_ = y; };
-        void Print();
+        void SetSize(int size) { size_ = size; }
+        void Print() const;
 
         Point();
-        Point(double x, double y);
+        Point(double x, double y, int px);
         Point(const Point& other);
 
         ~Point();
 };
 
-void Point::Print() { cout << "Point::Print(): X = " << x_ << ", Y = " << y_; }
+void Point::Print() const { cout << "Point::Print(): X = " << x_ << ", Y = " << y_ << ", size = " << size_; }
 
-Point::Point() : x_(0), y_(0) { cout << "Point: Конструктор по умолчанию" << endl; }
+Point::Point() : x_(0), y_(0), size_(5) { cout << "Point: Конструктор по умолчанию" << endl; }
 
-Point::Point(double x, double y) : x_(x), y_(y) { 
-    cout << "Point: Конструктор с параметрами (" << x << ", " << y << ")" << endl;
+Point::Point(double x, double y, int size) : x_(x), y_(y), size_(size) { 
+    cout << "Point: Конструктор с параметрами (" << x << ", " << y << ", " << size << ")" << endl;
 }
 
-Point::Point(const Point& other) : x_(other.x_), y_(other.y_) { cout << "Point: Конструктор копирования" << endl; }
+Point::Point(const Point& other) : x_(other.x_), y_(other.y_), size_(other.size_) { 
+    cout << "Point: Конструктор копирования" << endl; 
+}
 
-Point::~Point() { cout << "Point: Деструктор (" << x_ << ", " << y_ << ")" << endl; }
+Point::~Point() { cout << "Point: Деструктор (" << x_ << ", " << y_ << ", " << size_ << ")" << endl; }
 
 class ColoredPoint : public Point {
     private: 
         string color_;
     public:
         ColoredPoint();
-        ColoredPoint(double x, double y, const string& color);
+        ColoredPoint(double x, double y, int size, const string& color);
         ColoredPoint(const ColoredPoint& other);
 
         ~ColoredPoint();
 
-        string GetColor() { return color_; };
+        void SetPointSize(int size) { size_ = size; } // size_ - protected в классе Point
+        string GetColor() const { return color_; };
         void SetColor(const string& color) { color_ = color; };
-        void Print();
+        void Print() const;
 };
 
 ColoredPoint::ColoredPoint() : Point(), color_("black") { cout << "ColoredPoint: Конструктор по умолчанию" << endl; }
 
-ColoredPoint::ColoredPoint(double x, double y, const string& color) : Point(x, y), color_(color) {
+ColoredPoint::ColoredPoint(double x, double y, int size, const string& color) : Point(x, y, size), color_(color) {
     cout << "ColoredPoint: Конструктор с параметрами (" << color << ")" << endl;
 }
 
@@ -60,7 +67,7 @@ ColoredPoint::ColoredPoint(const ColoredPoint& other) : Point(other), color_(oth
 
 ColoredPoint::~ColoredPoint() { cout << "ColoredPoint: Деструктор (" << color_  << ")" << endl; }
 
-void ColoredPoint::Print() {
+void ColoredPoint::Print() const {
     cout << "ColoredPoint::Print(): ";
     Point::Print();
     cout << ", color = " << GetColor() << endl;
@@ -76,7 +83,7 @@ class Line {
         Line(const Line& other);
         ~Line();
 
-        void Print();
+        void Print() const;
         void Move(double dx, double dy);
 };
 
@@ -98,7 +105,7 @@ Line::~Line() {
     delete end_;
 }
 
-void Line::Print() {
+void Line::Print() const {
     cout << "Line::Print(): ";
     cout << "Line: Start (" << start_.GetX() << "," << start_.GetY() << "), End (" 
                             << end_->GetX() << ", " << end_->GetY() << ")" << endl;
@@ -108,15 +115,15 @@ void Line::Move (double dx, double dy) {
     start_.SetX(start_.GetX() + dx);
     start_.SetY(start_.GetY() + dy);
     end_->SetX(end_->GetX() + dx);
-    end_->SetX(end_->GetY() + dy);
+    end_->SetY(end_->GetY() + dy);
 }
 
 int main() {
-    cout << "=============== Часть 1 ===============\n";
+    cout << "=============== Часть 1. Создание и удаление объектов базового класса ===============\n";
 
     cout << "\n1. Создание динамических объектов Point.\n" << endl;
     Point *pa = new Point;
-    Point *pb = new Point(4.0, 10.0);
+    Point *pb = new Point(4.0, 10.0, 5);
     Point *pc = new Point(*pb);
 
     cout << "\n2. Вызов методов.\n" << endl;
@@ -131,7 +138,7 @@ int main() {
 
     cout << "\n4. Создание статических объектов Point.\n" << endl;
     Point a;
-    Point b(5.0, 8.5);
+    Point b(5.0, 8.5, 3);
     Point c(b);
 
     cout << "\n5. Вызов методов.\n" << endl;
@@ -139,11 +146,11 @@ int main() {
     b.Print(); cout << endl;
     c.Print(); cout << endl;
 
-    cout << "\n\n=============== Часть 2 ===============\n";
+    cout << "\n\n=============== Часть 2. Создание и удаление объектов класса-наследника ===============\n";
 
     cout << "\n6. Создание динамических объектов ColoredPoint.\n" << endl;
     ColoredPoint *cp1 = new ColoredPoint();
-    ColoredPoint *cp2 = new ColoredPoint(3.0, 6.0, "blue");
+    ColoredPoint *cp2 = new ColoredPoint(3.0, 6.0, 7, "blue");
     ColoredPoint *cp3 = new ColoredPoint(*cp1);
 
     cout << "\n7. Вызов методов.\n" << endl;
@@ -158,7 +165,7 @@ int main() {
 
     cout << "\n9. Создание статических объектов ColoredPoint.\n" << endl;
     ColoredPoint cpa;
-    ColoredPoint cpb(5.0, 8.5, "white");
+    ColoredPoint cpb(5.0, 8.5, 5, "white");
     ColoredPoint cpc(cpb);
 
     cout << "\n10. Вызов методов.\n" << endl;
@@ -167,7 +174,7 @@ int main() {
     cpc.Print();
 
     cout << "\n11. Присваивание производного класса базовому указателю:" << endl;
-    Point* ptr1 = new ColoredPoint(7.0, 8.0, "green");
+    Point* ptr1 = new ColoredPoint(7.0, 8.0, 5, "green");
     cout << "Вызов Print() через указатель на базовый класс:" << endl;
     ptr1->Print(); 
 
@@ -181,11 +188,11 @@ int main() {
     cout << "После копирования:" << endl;
     p4.Print();
 
-    cout << "\n\n=============== Часть 3 ===============\n";
+    cout << "\n\n=============== Часть 3. Композиция ===============\n";
 
     cout << "\n13. Композиция объектов." << endl;
     cout << "Создание линии:" << endl;
-    Line line(Point(0, 0), Point(10, 10));
+    Line line(Point(0, 0, 5), Point(10, 10, 5));
     line.Print();
 
     cout << endl;
@@ -202,11 +209,11 @@ int main() {
 
     cout << endl;
 
-    cout << "\n\n=============== Часть 4 ===============\n";
+    cout << "\n\n=============== Часть 4. Присваивание ===============\n";
 
     cout << "\n10. Разница между копированием объекта и указателя:" << endl;
-    Point e(1, 1);
-    Point f(2, 2);
+    Point e(1, 1, 4);
+    Point f(2, 2, 6);
     Point* pe = &e;
     Point* pf = &f;
     
@@ -240,9 +247,9 @@ int main() {
     cout << "\n*pf: ";
     pf->Print();
 
-    cout << "\n\n=============== Часть 5 ===============\n";
+    cout << "\n\n=============== Часть 5. Демонстрация работы конструкторов и деструкторов ===============\n";
 
-    ColoredPoint* cp = new ColoredPoint(3.5, 6.0, "green");
+    ColoredPoint* cp = new ColoredPoint(3.5, 6.0, 7, "green");
     delete cp;
 
     cout << "\nАвтоматическое удаление всех статических объектов, использующихся в программе:" << endl;
