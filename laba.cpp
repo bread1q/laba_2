@@ -66,6 +66,47 @@ void ColoredPoint::Print() {
     cout << ", color = " << GetColor() << endl;
 }
 
+class Line {
+    private:
+        Point start_;
+        Point* end_;
+    public:
+        Line();
+        Line(const Point& start, const Point& end);
+        Line(const Line& other);
+        ~Line();
+
+        void Print();
+        void Move(double dx, double dy);
+};
+
+Line::Line() : start_(), end_(new Point()) { cout << "Line: Конструктор по умолчанию" << endl; }
+
+Line::Line(const Point& start, const Point& end) : start_(start), end_(new Point(end)) {
+    cout << "Line: Конструктор с параметрами" << endl;
+}
+
+Line::Line(const Line& other) : start_(other.start_), end_(new Point(*other.end_)) {
+    cout << "Line: Конструктор копирования" << endl;
+}
+
+Line::~Line() { 
+    cout << "Line: Деструктор"; 
+    delete end_;
+}
+
+void Line::Print() {
+    cout << "Line: Start (" << start_.GetX() << "," << start_.GetY() << "), End (" 
+                            << end_->GetX() << ", " << end_->GetY() << ")" << endl;
+}
+
+void Line::Move (double dx, double dy) {
+    start_.SetX(start_.GetX() + dx);
+    start_.SetY(start_.GetY() + dy);
+    end_->SetX(end_->GetX() + dx);
+    end_->SetX(end_->GetY() + dy);
+}
+
 int main() {
     cout << "=============== Часть 1 ===============\n";
 
@@ -121,7 +162,22 @@ int main() {
     cpb.Print();
     cpc.Print();
 
-    cout << "\n\n";
+    cout << "\n11. Присваивание производного класса базовому указателю:" << endl;
+    Point* ptr1 = new ColoredPoint(7.0, 8.0, "green");
+    cout << "Вызов Print() через указатель на базовый класс:" << endl;
+    ptr1->Print(); 
+
+    cout << endl;
+    delete ptr1;
+
+    cout << "\n\n12. Копирование объектов:" << endl;
+    cout << "До копирования ColoredPoint в Point:" << endl;
+    cpb.Print();
+    Point p4 = cpb;
+    cout << "После копирования:" << endl;
+    p4.Print();
+
+
 
     return 0;
 }
