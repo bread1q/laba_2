@@ -83,19 +83,23 @@ class Line {
 Line::Line() : start_(), end_(new Point()) { cout << "Line: Конструктор по умолчанию" << endl; }
 
 Line::Line(const Point& start, const Point& end) : start_(start), end_(new Point(end)) {
-    cout << "Line: Конструктор с параметрами" << endl;
+    cout << "Line: Конструктор с параметрами Start (" << start_.GetX() << ", " << start_.GetY() << "), End (" <<
+                                                        end_->GetX() << ", " << end_->GetY() << ")" << endl;
 }
 
 Line::Line(const Line& other) : start_(other.start_), end_(new Point(*other.end_)) {
-    cout << "Line: Конструктор копирования" << endl;
+    cout << "Line: Конструктор копирования Start (" << start_.GetX() << ", " << start_.GetY() << "), End (" <<
+                                                        end_->GetX() << ", " << end_->GetY() << ")" << endl;
 }
 
 Line::~Line() { 
-    cout << "Line: Деструктор"; 
+    cout << "Line: Деструктор Start (" << start_.GetX() << ", " << start_.GetY() << "), End (" <<
+                                        end_->GetX() << ", " << end_->GetY() << ")" << endl;
     delete end_;
 }
 
 void Line::Print() {
+    cout << "Line::Print(): ";
     cout << "Line: Start (" << start_.GetX() << "," << start_.GetY() << "), End (" 
                             << end_->GetX() << ", " << end_->GetY() << ")" << endl;
 }
@@ -177,7 +181,71 @@ int main() {
     cout << "После копирования:" << endl;
     p4.Print();
 
+    cout << "\n\n=============== Часть 3 ===============\n";
 
+    cout << "\n13. Композиция объектов." << endl;
+    cout << "Создание линии:" << endl;
+    Line line(Point(0, 0), Point(10, 10));
+    line.Print();
+
+    cout << endl;
+    cout << "\nКопирование линии:" << endl;
+    Line line2 = line;
+    line2.Print();
+
+    cout << "\nИзменение копии." << endl;
+    line2.Move(5, 5);
+    cout << "Оригинал: ";
+    line.Print();
+    cout << "Копия: ";
+    line2.Print();
+
+    cout << endl;
+
+    cout << "\n\n=============== Часть 4 ===============\n";
+
+    cout << "\n10. Разница между копированием объекта и указателя:" << endl;
+    Point e(1, 1);
+    Point f(2, 2);
+    Point* pe = &e;
+    Point* pf = &f;
+    
+    cout << "\nДо присваивания объектов:";
+    cout << "\ne: ";
+    e.Print();
+    cout << "\nf: ";
+    f.Print();
+
+    e = f;
+    e.SetX(100);
+
+    cout << "\nПосле e = f и e.SetX(100):";
+    cout << "\ne: ";
+    e.Print();
+    cout << "\nf: ";
+    f.Print();
+
+    cout << "\nДо присваивания указателей:";
+    cout << "\n*pe: ";
+    pe->Print();
+    cout << "\n*pf: ";
+    pf->Print();
+
+    pe = pf; 
+    pe->SetX(200);
+
+    cout << "\nПосле pe = pf и pe->SetX(100): ";
+    cout << "\n*pe: ";
+    pe->Print();
+    cout << "\n*pf: ";
+    pf->Print();
+
+    cout << "\n\n=============== Часть 5 ===============\n";
+
+    ColoredPoint* cp = new ColoredPoint(3.5, 6.0, "green");
+    delete cp;
+
+    cout << "\nАвтоматическое удаление всех статических объектов, использующихся в программе:" << endl;
 
     return 0;
 }
